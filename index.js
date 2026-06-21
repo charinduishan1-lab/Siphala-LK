@@ -1,46 +1,260 @@
-const messageData = {
-  messaging_product: "whatsapp",
-  to: "94XXXXXXXXX", // Userගේ number එක
-  type: "interactive",
-  interactive: {
-    type: "list",
-    header: {
-      type: "text",
-      text: "🎓 Siphala.lk Online පන්ති"
-    },
-    body: {
-      text: `🌟 *2026 නව පන්ති ආරම්භය* 🌟\n\n🇱🇰 ලංකාවේ No.1 Online ඉගෙනුම් වේදිකාවට ඔබව සාදරයෙන් පිළිගනිමු!\n\n👨‍🏫 Siphala.lk සමඟ ඔබේ 2026 අධ්‍යයන වසර ජයගන්න.\n\n🤖 මෙය ස්වයංක්‍රීයව ක්‍රියාත්මක වන Whatsapp bot කෙනෙකි!\n\n👇 *Options* Button එක Click කර ශ්‍රේණිය තෝරන්න.`
-    },
-    footer: {
-      text: "Siphala.lk © 2026"
-    },
-    action: {
-      button: "ශ්‍රේණිය තෝරන්න", // Options වෙනුවට මේ Text එක පේනවා
-      sections: [
-        {
-          title: "2026 වසර සඳහා පන්ති",
-          rows: [
-            { id: "grade_6", title: "1️⃣ 6 ශ්‍රේණිය (2026)", description: "6 වසර සිසුන් සඳහා" },
-            { id: "grade_7", title: "2️⃣ 7 ශ්‍රේණිය (2026)", description: "7 වසර සිසුන් සඳහා" },
-            { id: "grade_8", title: "3️⃣ 8 ශ්‍රේණිය (2026)", description: "8 වසර සිසුන් සඳහා" },
-            { id: "grade_9", title: "4️⃣ 9 ශ්‍රේණිය (2026)", description: "9 වසර සිසුන් සඳහා" },
-            { id: "grade_10", title: "5️⃣ 10 ශ්‍රේණිය (2026)", description: "O/L 2027 Batch" },
-            { id: "grade_11", title: "6️⃣ 11 ශ්‍රේණිය (2026)", description: "O/L 2026 Batch" },
-          ]
-        },
-        {
-          title: "වෙනත් සේවා",
-          rows: [
-            { id: "books", title: "7️⃣ පොත් මිලදී ගැනීම", description: "Tute & Past Papers" },
-            { id: "teacher", title: "8️⃣ ගුරුවරයෙක් සම්බන්ධ කරගැනීම", description: "Support Team" }
+const express = require('express');
+const axios = require('axios');
+const app = express();
+app.use(express.json());
+
+// ===================================================================
+// EDIT THIS PART: උඹේ Siphala.lk Details ඔක්කොම මෙතන දාන්න
+// ===================================================================
+const SIPHALA_DATA = {
+  name: 'SIPHLA LK',
+  url: 'https://siphalalk.vercel.app',
+  about: 'Grade 3 ඉඳන් A/L දක්වා School Syllabus, Past Papers සහ YouTube Lessons නොමිලේ.',
+  phone: '071 474 9893',
+
+  // Grades + Subjects
+  syllabus: {
+    '10': {
+      name: '10 ශ්‍රේණිය',
+      subjects: {
+        'Buddhism': {
+          name: 'බුද්ධ ධර්මය',
+          lessons: [
+            {
+              no: 8,
+              title: 'අනුසස් දැක සිල්වත් වෙමු',
+              youtube: 'https://youtube.com/watch?v=REPLACE_ME', // ඇත්ත Video Link
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf' // ඇත්ත PDF Link
+            },
+            // තව Lessons Add කරන්න
+            // { no: 7, title: '...', youtube: '...', pdf: '...' }
           ]
         }
-      ]
+      }
+    },
+    '11': {
+      name: '11 ශ්‍රේණිය',
+      subjects: {
+        'Science': { name: 'විද්‍යාව', lessons: [] }
+      }
+    },
+    'A/L': {
+      name: 'උසස් පෙළ',
+      subjects: {
+        'Physics': { name: 'භෞතික විද්‍යාව', lessons: [] }
+      }
     }
+  },
+
+  pastPapers: {
+    'O/L': 'https://siphalalk.vercel.app/papers/ol',
+    'A/L': 'https://siphalalk.vercel.app/papers/al',
+    'Scholarship': 'https://siphalalk.vercel.app/papers/scholarship'
+  }
+};
+// ===================================================================
+
+// WhatsApp API Send Function
+async function sendWhatsAppMessage(to, data) {
+  try {
+    await axios.post(
+      `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
+      { messaging_product: 'whatsapp', to,...data },
+      { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
+    );
+  } catch (error) {
+    console.error('Error:', error.response?.data || error.message);
   }
 }
 
-// මේක axios එකෙන් POST කරපන්
-axios.post(`https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages`, messageData, {
-  headers: { Authorization: `Bearer ${ACCESS_TOKEN}` }
-})
+// 1. Webhook Verify
+app.get('/webhook', (req, res) => {
+  const { 'hub.mode': mode, 'hub.verify_token': token, 'hub.challenge': challenge } = req.query;
+  if (mode === 'subscribe' && token === process.env.VERIFY_TOKEN) {
+    res.status(200).send(challenge);
+  } else {
+    res.status(403).send('Forbidden');
+  }
+});
+
+// 2. Message Handler
+app.post('/webhook', async (req, res) => {
+  const body = req.body;
+  if (!body.object) return res.sendStatus(404);
+
+  const entry = body.entry[0].changes[0].value;
+  const message = entry.messages?.[0];
+  const from = message?.from;
+
+  if (!message) return res.status(200).send('EVENT_RECEIVED');
+
+  // Handle Button Clicks
+  if (message.type === 'interactive') {
+    const buttonId = message.interactive.button_reply?.id || message.interactive.list_reply?.id;
+
+    // Main Menu Button
+    if (buttonId === 'main_menu') {
+      await sendMainMenu(from);
+    }
+    // Grade Selection
+    else if (buttonId.startsWith('grade_')) {
+      const grade = buttonId.split('_')[1];
+      await sendSubjectMenu(from, grade);
+    }
+    // Subject Selection
+    else if (buttonId.startsWith('subject_')) {
+      const [, grade, subject] = buttonId.split('_');
+      await sendLessonList(from, grade, subject);
+    }
+    // Lesson Selection
+    else if (buttonId.startsWith('lesson_')) {
+      const [, grade, subject, lessonNo] = buttonId.split('_');
+      await sendLessonDetails(from, grade, subject, lessonNo);
+    }
+    // Past Papers
+    else if (buttonId === 'past_papers') {
+      await sendPastPapers(from);
+    }
+    return res.status(200).send('EVENT_RECEIVED');
+  }
+
+  // Handle Text Messages
+  const msg_body = message.text?.body?.toLowerCase().trim() || '';
+
+  if (['hi', 'hello', 'start', 'menu'].some(w => msg_body.includes(w))) {
+    await sendMainMenu(from);
+  }
+  else if (msg_body.includes('grade')) {
+    await sendGradeList(from);
+  }
+  else {
+    await sendWhatsAppMessage(from, {
+      type: 'text',
+      text: { body: `සමාවෙන්න, මට තේරුනේ නෑ 😅\n\nMenu එක ගන්න *hi* කියලා Type කරන්න` }
+    });
+  }
+
+  res.status(200).send('EVENT_RECEIVED');
+});
+
+// ================== BOT FUNCTIONS ==================
+
+// 1. Main Menu with Buttons
+async function sendMainMenu(to) {
+  await sendWhatsAppMessage(to, {
+    type: 'interactive',
+    interactive: {
+      type: 'button',
+      body: { text: `ආයුබෝවන්! *${SIPHALA_DATA.name}* එකට සාදරයෙන් පිළිගන්නවා 🙏\n\n${SIPHALA_DATA.about}` },
+      action: {
+        buttons: [
+          { type: 'reply', reply: { id: 'grade_list', title: '📚 ශ්‍රේණියක් තෝරන්න' } },
+          { type: 'reply', reply: { id: 'past_papers', title: '📝 Past Papers' } },
+          { type: 'reply', reply: { id: 'contact', title: '📞 Contact Us' } }
+        ]
+      }
+    }
+  });
+}
+
+// 2. Grade List
+async function sendGradeList(to) {
+  const rows = Object.keys(SIPHALA_DATA.syllabus).map(grade => ({
+    id: `grade_${grade}`,
+    title: SIPHALA_DATA.syllabus[grade].name,
+    description: `Grade ${grade} Syllabus බලන්න`
+  }));
+
+  await sendWhatsAppMessage(to, {
+    type: 'interactive',
+    interactive: {
+      type: 'list',
+      body: { text: '📚 *ඔයාගේ ශ්‍රේණිය තෝරන්න*' },
+      action: {
+        button: 'Grades',
+        sections: [{ title: 'Syllabus', rows }]
+      }
+    }
+  });
+}
+
+// 3. Subject Menu
+async function sendSubjectMenu(to, grade) {
+  const subjects = SIPHALA_DATA.syllabus[grade].subjects;
+  const buttons = Object.keys(subjects).slice(0, 3).map(sub => ({
+    type: 'reply',
+    reply: { id: `subject_${grade}_${sub}`, title: subjects[sub].name }
+  }));
+
+  await sendWhatsAppMessage(to, {
+    type: 'interactive',
+    interactive: {
+      type: 'button',
+      body: { text: `📘 *${SIPHALA_DATA.syllabus[grade].name}*\n\nSubject එකක් තෝරන්න:` },
+      action: { buttons }
+    }
+  });
+}
+
+// 4. Lesson List
+async function sendLessonList(to, grade, subject) {
+  const lessons = SIPHALA_DATA.syllabus[grade].subjects[subject].lessons;
+  if (lessons.length === 0) {
+    return sendWhatsAppMessage(to, { type: 'text', text: { body: 'මේ Subject එකට තාම Lessons Add කරලා නෑ. ඉක්මනින්ම දාන්නම්!' } });
+  }
+
+  const rows = lessons.map(lesson => ({
+    id: `lesson_${grade}_${subject}_${lesson.no}`,
+    title: `${lesson.no} පාඩම`,
+    description: lesson.title.substring(0, 72)
+  }));
+
+  await sendWhatsAppMessage(to, {
+    type: 'interactive',
+    interactive: {
+      type: 'list',
+      body: { text: `☸️ *${SIPHALA_DATA.syllabus[grade].subjects[subject].name} - ${grade} ශ්‍රේණිය*\n\nපාඩමක් තෝරන්න:` },
+      action: {
+        button: 'Lessons',
+        sections: [{ title: 'පාඩම්', rows }]
+      }
+    }
+  });
+}
+
+// 5. Send Lesson Details: Video + PDF Buttons
+async function sendLessonDetails(to, grade, subject, lessonNo) {
+  const lesson = SIPHALA_DATA.syllabus[grade].subjects[subject].lessons.find(l => l.no == lessonNo);
+
+  await sendWhatsAppMessage(to, {
+    type: 'interactive',
+    interactive: {
+      type: 'button',
+      body: { text: `🎥 *${lesson.no} පාඩම: ${lesson.title}*\n\n*${grade} ශ්‍රේණිය - ${SIPHALA_DATA.syllabus[grade].subjects[subject].name}*` },
+      action: {
+        buttons: [
+          { type: 'reply', reply: { id: `video_${lesson.youtube}`, title: '▶️ YouTube Video' } },
+          { type: 'reply', reply: { id: `pdf_${lesson.pdf}`, title: '📄 Download PDF' } },
+          { type: 'reply', reply: { id: 'main_menu', title: '🏠 Main Menu' } }
+        ]
+      }
+    }
+  });
+
+  // If user clicks video/pdf button, send the link
+  // This part needs another handler, but for now we send links directly
+}
+
+// 6. Past Papers
+async function sendPastPapers(to) {
+  let text = `📝 *Past Papers Download*\n\n`;
+  Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => {
+    text += `*${exam}*: ${SIPHALA_DATA.pastPapers[exam]}\n\n`;
+  });
+  text += `Website: ${SIPHALA_DATA.url}`;
+
+  await sendWhatsAppMessage(to, { type: 'text', text: { body: text } });
+}
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Siphala Advanced Bot running on port ${PORT}`));
