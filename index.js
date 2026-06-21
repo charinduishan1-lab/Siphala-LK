@@ -3,7 +3,7 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 
-// ========= උඹේ Details දැම්මා =========
+// ========= උඹේ WhatsApp Details =========
 const TOKEN = "EAAWk0lWWV7lBR0brllilV8a7NV1cGlVuCwz4hakRu34r8i7edh3p1OZChGH1vLlsZySuJR0wTJlK1Q0gnZCYfaLO9JLlXpunulTmgUjYZBKT4HmZBo0W5YZAaKAOeadAuwRFJ8UyRDToCHmeV94j9YZCMMU13qjxfE7ixyAPVJ3hm47UsITdFKEZCNONlcXlQZDZD";
 const PHONE_ID = "1213351778520369";
 const VERIFY = "siphala";
