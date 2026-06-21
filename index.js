@@ -94,20 +94,8 @@ app.post('/webhook', async (req, res) => {
 
     // Main Menu Button
     if (buttonId === 'main_menu') {
-  await sendMainMenu(from);
-}
-else if (buttonId === 'grade_list') {
-  await sendGradeList(from);
-}
-else if (buttonId === 'contact') {
-  await sendWhatsAppMessage(from, {
-    type: 'text',
-    text: {
-      body: `📞 Contact Us\n\n${SIPHALA_DATA.phone}\n${SIPHALA_DATA.url}`
+      await sendMainMenu(from);
     }
-  });
-}
-else if (buttonId.startsWith('grade_')) {
     // Grade Selection
     else if (buttonId.startsWith('grade_')) {
       const grade = buttonId.split('_')[1];
@@ -236,18 +224,7 @@ async function sendLessonList(to, grade, subject) {
 
 // 5. Send Lesson Details: Video + PDF Buttons
 async function sendLessonDetails(to, grade, subject, lessonNo) {
-  const lesson = SIPHALA_DATA.syllabus[grade]
-  .subjects[subject]
-  .lessons.find(l => l.no == lessonNo);
-
-if (!lesson) {
-  return sendWhatsAppMessage(to, {
-    type: 'text',
-    text: {
-      body: 'Lesson එක හමු වුනේ නැහැ.'
-    }
-  });
-}
+  const lesson = SIPHALA_DATA.syllabus[grade].subjects[subject].lessons.find(l => l.no == lessonNo);
 
   await sendWhatsAppMessage(to, {
     type: 'interactive',
