@@ -20,14 +20,15 @@ const SIPHALA_DATA = {
         'Buddhism': {
           name: 'බුද්ධ ධර්මය',
           lessons: [
-            {
-              no: 8,
-              title: 'අනුසස් දැක සිල්වත් වෙමු',
-              youtube: 'https://youtube.com/watch?v=REPLACE_ME', // ඇත්ත Video Link
-              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf' // ඇත්ත PDF Link
-            },
-            // තව Lessons Add කරන්න
-            // { no: 7, title: '...', youtube: '...', pdf: '...' }
+            { no: 1, title: 'ශ්‍රද්ධාව', youtube: 'https://youtube.com/watch?v=VIDEO1', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_1.pdf' },
+            { no: 2, title: 'දානමය කුසලය', youtube: 'https://youtube.com/watch?v=VIDEO2', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_2.pdf' },
+            { no: 8, title: 'අනුසස් දැක සිල්වත් වෙමු', youtube: 'https://youtube.com/watch?v=REPLACE_ME', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf' }
+          ]
+        },
+        'Science': {
+          name: 'විද්‍යාව',
+          lessons: [
+            { no: 1, title: 'ජීවී ලෝකය', youtube: 'https://youtube.com/watch?v=SCI1', pdf: 'https://siphalalk.vercel.app/pdf/grade10_science_1.pdf' }
           ]
         }
       }
@@ -38,8 +39,8 @@ const SIPHALA_DATA = {
         'Science': { name: 'විද්‍යාව', lessons: [] }
       }
     },
-    'A/L': {
-      name: 'උසස් පෙළ',
+    'A/L-Science': {
+      name: 'උසස් පෙළ - විද්‍යා',
       subjects: {
         'Physics': { name: 'භෞතික විද්‍යාව', lessons: [] }
       }
@@ -55,7 +56,6 @@ const SIPHALA_DATA = {
 // ===================================================================
 
 // WhatsApp API Send Function
-// 👇 FIX 1: to,...data Bug එක හැදුවා
 async function sendWhatsAppMessage(to, data) {
   try {
     await axios.post(
@@ -127,19 +127,23 @@ app.post('/webhook', async (req, res) => {
       await sendGradeList(from);
     }
     // Grade Selection
-    // 👇 FIX 2: A/L-Science වගේ නම් වලට වැඩ කරන්න හැදුවා
     else if (buttonId.startsWith('grade_')) {
       const grade = buttonId.replace('grade_', '');
       await sendSubjectMenu(from, grade);
     }
-    // Subject Selection
+    // Subject Selection - FIXED SPLIT
     else if (buttonId.startsWith('subject_')) {
-      const [, grade, subject] = buttonId.split('_');
+      const parts = buttonId.split('_');
+      const grade = parts[1];
+      const subject = parts.slice(2).join('_');
       await sendLessonList(from, grade, subject);
     }
-    // Lesson Selection
+    // Lesson Selection - FIXED SPLIT
     else if (buttonId.startsWith('lesson_')) {
-      const [, grade, subject, lessonNo] = buttonId.split('_');
+      const parts = buttonId.split('_');
+      const grade = parts[1];
+      const subject = parts[2];
+      const lessonNo = parts[3];
       await sendLessonDetails(from, grade, subject, lessonNo);
     }
     // Video Button
@@ -292,7 +296,6 @@ async function sendLessonDetails(to, grade, subject, lessonNo) {
 }
 
 // 6. Past Papers
-// 👇 FIX 3: Past Papers Link Bug එක හැදුවා
 async function sendPastPapers(to) {
   let text = `📝 *Past Papers Download*\n\n`;
   Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => {
@@ -303,6 +306,5 @@ async function sendPastPapers(to) {
   await sendWhatsAppMessage(to, { type: 'text', text: { body: text } });
 }
 
-// 👇 FIX 4: app.listen Bug එක හැදුවා
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Siphala Advanced Bot running on port ${PORT}`));
