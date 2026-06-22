@@ -20,15 +20,54 @@ const SIPHALA_DATA = {
         'Buddhism': {
           name: 'බුද්ධ ධර්මය',
           lessons: [
-            { no: 1, title: 'ශ්‍රද්ධාව', youtube: 'https://youtube.com/watch?v=VIDEO1', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_1.pdf' },
-            { no: 2, title: 'දානමය කුසලය', youtube: 'https://youtube.com/watch?v=VIDEO2', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_2.pdf' },
-            { no: 8, title: 'අනුසස් දැක සිල්වත් වෙමු', youtube: 'https://youtube.com/watch?v=REPLACE_ME', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf' }
-          ]
-        },
-        'Science': {
-          name: 'විද්‍යාව',
-          lessons: [
-            { no: 1, title: 'ජීවී ලෝකය', youtube: 'https://youtube.com/watch?v=SCI1', pdf: 'https://siphalalk.vercel.app/pdf/grade10_science_1.pdf' }
+            {
+              no: 1,
+              title: 'අතියෙන් සැනහී සිටින බෝසතාණෝ',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_1', // ඇත්ත Video Link දාන්න
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_1.pdf'
+            },
+            {
+              no: 2,
+              title: 'කඨින පූජා මහෝත්සවය',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_2',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_2.pdf'
+            },
+            {
+              no: 3,
+              title: 'යහපත් දරුවන් හදන ගුණ',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_3',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_3.pdf'
+            },
+            {
+              no: 4,
+              title: 'සර දිග වඩින අය',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_4',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_4.pdf'
+            },
+            {
+              no: 5,
+              title: 'විදසුන් වඩවන අය හඳුනා ගනිමු',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_5',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_5.pdf'
+            },
+            {
+              no: 6,
+              title: 'සසර සැප සැපතට අත වනා',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_6',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_6.pdf'
+            },
+            {
+              no: 7,
+              title: 'බණ දහම් දියුණු කරන අය',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_7',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_7.pdf'
+            },
+            {
+              no: 8,
+              title: 'අනුසස් දැක සිල්වත් වෙමු',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_8',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf'
+            }
           ]
         }
       }
@@ -39,8 +78,8 @@ const SIPHALA_DATA = {
         'Science': { name: 'විද්‍යාව', lessons: [] }
       }
     },
-    'A/L-Science': {
-      name: 'උසස් පෙළ - විද්‍යා',
+    'A/L': {
+      name: 'උසස් පෙළ',
       subjects: {
         'Physics': { name: 'භෞතික විද්‍යාව', lessons: [] }
       }
@@ -131,14 +170,14 @@ app.post('/webhook', async (req, res) => {
       const grade = buttonId.replace('grade_', '');
       await sendSubjectMenu(from, grade);
     }
-    // Subject Selection - FIXED SPLIT
+    // Subject Selection
     else if (buttonId.startsWith('subject_')) {
       const parts = buttonId.split('_');
       const grade = parts[1];
       const subject = parts.slice(2).join('_');
       await sendLessonList(from, grade, subject);
     }
-    // Lesson Selection - FIXED SPLIT
+    // Lesson Selection
     else if (buttonId.startsWith('lesson_')) {
       const parts = buttonId.split('_');
       const grade = parts[1];
