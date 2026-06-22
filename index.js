@@ -22,7 +22,7 @@ const SIPHALA_DATA = {
     '10': {
       name: '10 ශ්‍රේණිය',
       subjects: {
-        'Buddhism': { name: 'බුද්ධ ධර්මය', lessons: [{ no: 8, title: 'අනුසස් දැක සිල්වත් වෙමු', youtube: 'REPLACE_ME', pdf: 'REPLACE_ME' }] },
+        'Buddhism': { name: 'බුද්ධ ධර්මය', lessons: [{ no: 8, title: 'අනුසස් දැක සිල්වත් වෙමු', youtube: 'https://youtube.com/watch?v=REPLACE_ME', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf' }] },
         'Science': { name: 'විද්‍යාව', lessons: [] },
         'Maths': { name: 'ගණිතය', lessons: [] }
       }
@@ -58,7 +58,7 @@ async function sendWhatsAppMessage(to, data) {
       { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
     );
   } catch (error) {
-    console.error('Send Error:', error.response?.data || error.message);
+    console.error('Send Error:', error.response?.data?.error || error.message);
   }
 }
 
@@ -76,13 +76,15 @@ app.post('/webhook', async (req, res) => {
   const from = message?.from;
   if (!message) return res.status(200).send('EVENT_RECEIVED');
 
-  console.log(`📩 New Message from ${from}:`, message.text?.body || message.interactive?.button_reply?.id);
+  console.log(`📩 New Message from ${from}:`, message.text?.body || message.interactive?.button_reply?.id || message.interactive?.list_reply?.id);
 
   if (message.type === 'interactive') {
     const buttonId = message.interactive.button_reply?.id || message.interactive.list_reply?.id;
+
+    // 👇 FIX 1: grade_list Handle කලා
     if (buttonId === 'main_menu') await sendMainMenu(from);
-    else if (buttonId === 'grade_list') await sendGradeList(from);
-    else if (buttonId.startsWith('grade_')) await sendSubjectMenu(from, buttonId.split('_')[1]);
+    else if (buttonId === 'grade_list') await sendGradeList(from); // මේ Line එක තිබ්බේ නෑ
+    else if (buttonId.startsWith('grade_')) await sendSubjectMenu(from, buttonId.replace('grade_', ''));
     else if (buttonId.startsWith('subject_')) { const [, grade, subject] = buttonId.split('_'); await sendLessonList(from, grade, subject); }
     else if (buttonId.startsWith('lesson_')) { const [, grade, subject, lessonNo] = buttonId.split('_'); await sendLessonDetails(from, grade, subject, lessonNo); }
     else if (buttonId.startsWith('video_')) await sendWhatsAppMessage(from, { type: 'text', text: { body: `▶️ YouTube Video:\n${buttonId.replace('video_', '')}` } });
@@ -103,32 +105,44 @@ app.post('/webhook', async (req, res) => {
 async function sendMainMenu(to) {
   await sendWhatsAppMessage(to, { type: 'interactive', interactive: { type: 'button', body: { text: `ආයුබෝවන්! *${SIPHALA_DATA.name}* එකට සාදරයෙන් පිළිගන්නවා 🙏\n\n${SIPHALA_DATA.about}` }, action: { buttons: [{ type: 'reply', reply: { id: 'grade_list', title: '📚 ශ්‍රේණියක් තෝරන්න' } }, { type: 'reply', reply: { id: 'past_papers', title: '📝 Past Papers' } }, { type: 'reply', reply: { id: 'contact', title: '📞 Contact Us' } }] } } });
 }
+
 async function sendGradeList(to) {
-  const rows = Object.keys(SIPHALA_DATA.syllabus).map(grade => ({ id: `grade_${grade}`, title: SIPHALA_DATA.syllabus[grade].name, description: `Grade ${grade} Syllabus` }));
-  await sendWhatsAppMessage(to, { type: 'interactive', interactive: { type: 'list', body: { text: '📚 *ඔයාගේ ශ්‍රේණිය තෝරන්න*' }, action: { button: 'Grades', sections: [{ title: 'Syllabus', rows }] } } });
+  const rows = Object.keys(SIPHALA_DATA.syllabus).map(grade => ({
+    id: `grade_${grade}`,
+    title: SIPHALA_DATA.syllabus[grade].name,
+    description: `Syllabus බලන්න`
+  }));
+  await sendWhatsAppMessage(to, { type: 'interactive', interactive: { type: 'list', body: { text: '📚 *ඔයාගේ ශ්‍රේණිය තෝරන්න*' }, action: { button: 'Grades', sections: [{ title: 'ශ්‍රේණි', rows }] } } });
 }
+
 async function sendSubjectMenu(to, grade) {
   const subjects = SIPHALA_DATA.syllabus[grade].subjects;
   const buttons = Object.keys(subjects).slice(0, 3).map(sub => ({ type: 'reply', reply: { id: `subject_${grade}_${sub}`, title: subjects[sub].name.substring(0, 20) } }));
   await sendWhatsAppMessage(to, { type: 'interactive', interactive: { type: 'button', body: { text: `📘 *${SIPHALA_DATA.syllabus[grade].name}*\n\nSubject එකක් තෝරන්න:` }, action: { buttons } } });
 }
+
 async function sendLessonList(to, grade, subject) {
   const lessons = SIPHALA_DATA.syllabus[grade].subjects[subject].lessons;
   if (lessons.length === 0) return sendWhatsAppMessage(to, { type: 'text', text: { body: 'මේ Subject එකට තාම Lessons Add කරලා නෑ. ඉක්මනින්ම දාන්නම්!' } });
   const rows = lessons.map(lesson => ({ id: `lesson_${grade}_${subject}_${lesson.no}`, title: `${lesson.no} පාඩම`, description: lesson.title.substring(0, 72) }));
   await sendWhatsAppMessage(to, { type: 'interactive', interactive: { type: 'list', body: { text: `☸️ *${SIPHALA_DATA.syllabus[grade].subjects[subject].name} - ${grade} ශ්‍රේණිය*\n\nපාඩමක් තෝරන්න:` }, action: { button: 'Lessons', sections: [{ title: 'පාඩම්', rows }] } } });
 }
+
 async function sendLessonDetails(to, grade, subject, lessonNo) {
   const lesson = SIPHALA_DATA.syllabus[grade].subjects[subject].lessons.find(l => l.no == lessonNo);
   if (!lesson) return sendWhatsAppMessage(to, { type: 'text', text: { body: 'සමාවෙන්න, පාඩම හොයාගන්න බැරිවුණා 😅' } });
   await sendWhatsAppMessage(to, { type: 'interactive', interactive: { type: 'button', body: { text: `🎥 *${lesson.no} පාඩම: ${lesson.title}*\n\n*${grade} ශ්‍රේණිය - ${SIPHALA_DATA.syllabus[grade].subjects[subject].name}*` }, action: { buttons: [{ type: 'reply', reply: { id: `video_${lesson.youtube}`, title: '▶️ YouTube Video' } }, { type: 'reply', reply: { id: `pdf_${lesson.pdf}`, title: '📄 Download PDF' } }, { type: 'reply', reply: { id: 'main_menu', title: '🏠 Main Menu' } }] } } });
 }
+
+// 👇 FIX 2: Past Papers Link Bug එක හැදුවා
 async function sendPastPapers(to) {
   let text = `📝 *Past Papers Download*\n\n`;
-  Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => { text += `*${exam}*: ${SIPHALA_DATA.pastPapers}\n\n`; });
+  Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => {
+    text += `*${exam}*: ${SIPHALA_DATA.pastPapers[exam]}\n\n`; // මෙතන හරි
+  });
   text += `Website: ${SIPHALA_DATA.url}`;
   await sendWhatsAppMessage(to, { type: 'text', text: { body: text } });
 }
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Siphala Bot running on port ${PORT}`));
+app.listen(PORT, => console.log(`Siphala Bot running on port ${PORT}`));
