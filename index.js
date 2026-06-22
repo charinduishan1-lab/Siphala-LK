@@ -63,7 +63,25 @@ async function sendWhatsAppMessage(to, data) {
       { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
     );
   } catch (error) {
-    console.error('Error:', error.response?.data || error.message);
+    console.error('Send Error:', error.response?.data || error.message);
+  }
+}
+
+// 👇 1. Typing Indicator Function එක
+async function showTyping(to, messageId) {
+  try {
+    await axios.post(
+      `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
+      {
+        messaging_product: 'whatsapp',
+        status: 'read',
+        message_id: messageId,
+        typing_indicator: { type: 'text' }
+      },
+      { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
+    );
+  } catch (error) {
+    console.error('Typing Error:', error.response?.data || error.message);
   }
 }
 
@@ -88,6 +106,13 @@ app.post('/webhook', async (req, res) => {
 
   if (!message) return res.status(200).send('EVENT_RECEIVED');
 
+  // 👇 2. Typing පෙන්නනවා + Delay එක
+  await showTyping(from, message.id);
+  await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5s delay
+
+  // 👇 3. Message Log කරනවා
+  console.log(`📩 New Message from ${from}:`, message.text?.body || message.interactive?.button_reply?.id || message.interactive?.list_reply?.id);
+
   // Handle Button Clicks
   if (message.type === 'interactive') {
     const buttonId = message.interactive.button_reply?.id || message.interactive.list_reply?.id;
@@ -95,6 +120,10 @@ app.post('/webhook', async (req, res) => {
     // Main Menu Button
     if (buttonId === 'main_menu') {
       await sendMainMenu(from);
+    }
+    // Grade List
+    else if (buttonId === 'grade_list') {
+      await sendGradeList(from);
     }
     // Grade Selection
     else if (buttonId.startsWith('grade_')) {
@@ -111,9 +140,23 @@ app.post('/webhook', async (req, res) => {
       const [, grade, subject, lessonNo] = buttonId.split('_');
       await sendLessonDetails(from, grade, subject, lessonNo);
     }
+    // Video Button
+    else if (buttonId.startsWith('video_')) {
+      const youtubeLink = buttonId.replace('video_', '');
+      await sendWhatsAppMessage(from, { type: 'text', text: { body: `▶️ YouTube Video:\n${youtubeLink}` } });
+    }
+    // PDF Button
+    else if (buttonId.startsWith('pdf_')) {
+      const pdfLink = buttonId.replace('pdf_', '');
+      await sendWhatsAppMessage(from, { type: 'text', text: { body: `📄 PDF Download:\n${pdfLink}` } });
+    }
     // Past Papers
     else if (buttonId === 'past_papers') {
       await sendPastPapers(from);
+    }
+    // Contact
+    else if (buttonId === 'contact') {
+      await sendWhatsAppMessage(from, { type: 'text', text: { body: `📞 Contact Us:\n${SIPHALA_DATA.phone}\nWebsite: ${SIPHALA_DATA.url}` } });
     }
     return res.status(200).send('EVENT_RECEIVED');
   }
@@ -183,7 +226,7 @@ async function sendSubjectMenu(to, grade) {
   const subjects = SIPHALA_DATA.syllabus[grade].subjects;
   const buttons = Object.keys(subjects).slice(0, 3).map(sub => ({
     type: 'reply',
-    reply: { id: `subject_${grade}_${sub}`, title: subjects[sub].name }
+    reply: { id: `subject_${grade}_${sub}`, title: subjects[sub].name.substring(0, 20) }
   }));
 
   await sendWhatsAppMessage(to, {
@@ -226,6 +269,10 @@ async function sendLessonList(to, grade, subject) {
 async function sendLessonDetails(to, grade, subject, lessonNo) {
   const lesson = SIPHALA_DATA.syllabus[grade].subjects[subject].lessons.find(l => l.no == lessonNo);
 
+  if (!lesson) {
+    return sendWhatsAppMessage(to, { type: 'text', text: { body: 'සමාවෙන්න, පාඩම හොයාගන්න බැරිවුණා 😅' } });
+  }
+
   await sendWhatsAppMessage(to, {
     type: 'interactive',
     interactive: {
@@ -240,9 +287,6 @@ async function sendLessonDetails(to, grade, subject, lessonNo) {
       }
     }
   });
-
-  // If user clicks video/pdf button, send the link
-  // This part needs another handler, but for now we send links directly
 }
 
 // 6. Past Papers
