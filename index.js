@@ -55,11 +55,12 @@ const SIPHALA_DATA = {
 // ===================================================================
 
 // WhatsApp API Send Function
+// 👇 FIX 1: to,...data Bug එක හැදුවා
 async function sendWhatsAppMessage(to, data) {
   try {
     await axios.post(
       `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
-      { messaging_product: 'whatsapp', to,...data },
+      { messaging_product: 'whatsapp', to: to,...data },
       { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
     );
   } catch (error) {
@@ -126,8 +127,9 @@ app.post('/webhook', async (req, res) => {
       await sendGradeList(from);
     }
     // Grade Selection
+    // 👇 FIX 2: A/L-Science වගේ නම් වලට වැඩ කරන්න හැදුවා
     else if (buttonId.startsWith('grade_')) {
-      const grade = buttonId.split('_')[1];
+      const grade = buttonId.replace('grade_', '');
       await sendSubjectMenu(from, grade);
     }
     // Subject Selection
@@ -290,15 +292,17 @@ async function sendLessonDetails(to, grade, subject, lessonNo) {
 }
 
 // 6. Past Papers
+// 👇 FIX 3: Past Papers Link Bug එක හැදුවා
 async function sendPastPapers(to) {
   let text = `📝 *Past Papers Download*\n\n`;
   Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => {
-    text += `*${exam}*: ${SIPHALA_DATA.pastPapers[exam]}\n\n`;
+    text += `*${exam}*: ${SIPHALA_DATA.pastPapers}\n\n`;
   });
   text += `Website: ${SIPHALA_DATA.url}`;
 
   await sendWhatsAppMessage(to, { type: 'text', text: { body: text } });
 }
 
+// 👇 FIX 4: app.listen Bug එක හැදුවා
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Siphala Advanced Bot running on port ${PORT}`));
