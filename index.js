@@ -341,11 +341,11 @@ async function sendLessonDetails(to, grade, subject, lessonNo) {
   });
 }
 
-// 6. Past Papers - FIXED
+// 6. Past Papers - FIXED BUG HERE
 async function sendPastPapers(to) {
   let text = `📝 *Past Papers Download*\n\n`;
   Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => {
-    text += `*${exam}*: ${SIPHALA_DATA.pastPapers}\n\n`;
+    text += `*${exam}*: ${SIPHALA_DATA.pastPapers[exam]}\n\n`; // 👈 මේක තමයි Bug එක. [exam] දැම්මා
   });
   text += `Website: ${SIPHALA_DATA.url}`;
 
