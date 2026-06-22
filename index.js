@@ -9,8 +9,10 @@ app.use(express.json());
 const SIPHALA_DATA = {
   name: 'SIPHLA LK',
   url: 'https://siphalalk.vercel.app',
-  about: 'Grade 3 ඉඳන් A/L දක්වා School Syllabus, Past Papers සහ YouTube Lessons නොමිලේ.',
+  about: 'No. 1 E-Learning Platform\nGrade 3 ඉඳන් A/L දක්වා School Syllabus, Past Papers සහ YouTube Lessons නොමිලේ.\n\nVision: To redefine education through technology, making knowledge accessible and fun for every child.',
   phone: '071 474 9893',
+  email: 'siphalakofficial@gmail.com',
+  telegram: 'siphalalk bot',
 
   // Grades + Subjects
   syllabus: {
@@ -20,54 +22,14 @@ const SIPHALA_DATA = {
         'Buddhism': {
           name: 'බුද්ධ ධර්මය',
           lessons: [
-            {
-              no: 1,
-              title: 'අතියෙන් සැනහී සිටින බෝසතාණෝ',
-              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_1', // ඇත්ත Video Link දාන්න
-              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_1.pdf'
-            },
-            {
-              no: 2,
-              title: 'කඨින පූජා මහෝත්සවය',
-              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_2',
-              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_2.pdf'
-            },
-            {
-              no: 3,
-              title: 'යහපත් දරුවන් හදන ගුණ',
-              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_3',
-              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_3.pdf'
-            },
-            {
-              no: 4,
-              title: 'සර දිග වඩින අය',
-              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_4',
-              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_4.pdf'
-            },
-            {
-              no: 5,
-              title: 'විදසුන් වඩවන අය හඳුනා ගනිමු',
-              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_5',
-              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_5.pdf'
-            },
-            {
-              no: 6,
-              title: 'සසර සැප සැපතට අත වනා',
-              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_6',
-              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_6.pdf'
-            },
-            {
-              no: 7,
-              title: 'බණ දහම් දියුණු කරන අය',
-              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_7',
-              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_7.pdf'
-            },
-            {
-              no: 8,
-              title: 'අනුසස් දැක සිල්වත් වෙමු',
-              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_8',
-              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf'
-            }
+            { no: 1, title: 'අතියෙන් සැනහී සිටින බෝසතාණෝ', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_1', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_1.pdf' },
+            { no: 2, title: 'කඨින පූජා මහෝත්සවය', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_2', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_2.pdf' },
+            { no: 3, title: 'යහපත් දරුවන් හදන ගුණ', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_3', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_3.pdf' },
+            { no: 4, title: 'සර දිග වඩින අය', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_4', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_4.pdf' },
+            { no: 5, title: 'විදසුන් වඩවන අය හඳුනා ගනිමු', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_5', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_5.pdf' },
+            { no: 6, title: 'සසර සැප සැපතට අත වනා', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_6', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_6.pdf' },
+            { no: 7, title: 'බණ දහම් දියුණු කරන අය', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_7', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_7.pdf' },
+            { no: 8, title: 'අනුසස් දැක සිල්වත් වෙමු', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_8', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf' }
           ]
         }
       }
@@ -201,7 +163,7 @@ app.post('/webhook', async (req, res) => {
     }
     // Contact
     else if (buttonId === 'contact') {
-      await sendWhatsAppMessage(from, { type: 'text', text: { body: `📞 Contact Us:\n${SIPHALA_DATA.phone}\nWebsite: ${SIPHALA_DATA.url}` } });
+      await sendContact(from);
     }
     return res.status(200).send('EVENT_RECEIVED');
   }
@@ -334,7 +296,7 @@ async function sendLessonDetails(to, grade, subject, lessonNo) {
   });
 }
 
-// 6. Past Papers
+// 6. Past Papers - BUG FIXED
 async function sendPastPapers(to) {
   let text = `📝 *Past Papers Download*\n\n`;
   Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => {
@@ -343,6 +305,21 @@ async function sendPastPapers(to) {
   text += `Website: ${SIPHALA_DATA.url}`;
 
   await sendWhatsAppMessage(to, { type: 'text', text: { body: text } });
+}
+
+// 7. Contact - UPDATED
+async function sendContact(to) {
+  await sendWhatsAppMessage(to, {
+    type: 'text',
+    text: {
+      body: `📞 *Contact SIPHLA LK*\n\n` +
+            `📱 Phone: ${SIPHALA_DATA.phone}\n` +
+            `📧 Email: ${SIPHALA_DATA.email}\n` +
+            `✈️ Telegram: ${SIPHALA_DATA.telegram}\n` +
+            `🌐 Website: ${SIPHALA_DATA.url}\n\n` +
+            `ඕනම ගැටලුවක් තියෙනවා නම් අපිට කතා කරන්න 🙏`
+    }
+  });
 }
 
 const PORT = process.env.PORT || 3000;
