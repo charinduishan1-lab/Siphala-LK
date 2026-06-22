@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 
 // ===================================================================
-// UPDATED: siphalalk.vercel.app Full Data
+// SIPHALA.LK DATA - siphalalk.vercel.app
 // ===================================================================
 const SIPHALA_DATA = {
   name: 'SIPHLA LK',
@@ -62,25 +62,6 @@ async function sendWhatsAppMessage(to, data) {
   }
 }
 
-// 👇 FIXED: Typing + Read Receipt
-async function markAsReadAndReact(to, messageId) {
-  try {
-    await axios.post(
-      `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
-      { messaging_product: 'whatsapp', status: 'read', message_id: messageId },
-      { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
-    );
-    // Reaction එකක් දානවා - User ට පේනවා Bot වැඩ කියලා
-    await axios.post(
-      `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
-      { messaging_product: 'whatsapp', recipient_type: 'individual', to: to, type: 'reaction', reaction: { message_id: messageId, emoji: '⏳' } },
-      { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
-    );
-  } catch (error) {
-    console.error('Read/React Error:', error.response?.data?.error || error.message);
-  }
-}
-
 app.get('/webhook', (req, res) => {
   const { 'hub.mode': mode, 'hub.verify_token': token, 'hub.challenge': challenge } = req.query;
   if (mode === 'subscribe' && token === process.env.VERIFY_TOKEN) res.status(200).send(challenge);
@@ -94,10 +75,6 @@ app.post('/webhook', async (req, res) => {
   const message = entry.messages?.[0];
   const from = message?.from;
   if (!message) return res.status(200).send('EVENT_RECEIVED');
-
-  // 👇 Typing වෙනුවට Read + Reaction
-  await markAsReadAndReact(from, message.id);
-  await new Promise(resolve => setTimeout(resolve, 1000));
 
   console.log(`📩 New Message from ${from}:`, message.text?.body || message.interactive?.button_reply?.id);
 
@@ -122,7 +99,7 @@ app.post('/webhook', async (req, res) => {
   res.status(200).send('EVENT_RECEIVED');
 });
 
-// BOT FUNCTIONS - කලින් වගේම
+// BOT FUNCTIONS
 async function sendMainMenu(to) {
   await sendWhatsAppMessage(to, { type: 'interactive', interactive: { type: 'button', body: { text: `ආයුබෝවන්! *${SIPHALA_DATA.name}* එකට සාදරයෙන් පිළිගන්නවා 🙏\n\n${SIPHALA_DATA.about}` }, action: { buttons: [{ type: 'reply', reply: { id: 'grade_list', title: '📚 ශ්‍රේණියක් තෝරන්න' } }, { type: 'reply', reply: { id: 'past_papers', title: '📝 Past Papers' } }, { type: 'reply', reply: { id: 'contact', title: '📞 Contact Us' } }] } } });
 }
@@ -148,10 +125,10 @@ async function sendLessonDetails(to, grade, subject, lessonNo) {
 }
 async function sendPastPapers(to) {
   let text = `📝 *Past Papers Download*\n\n`;
-  Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => { text += `*${exam}*: ${SIPHALA_DATA.pastPapers[exam]}\n\n`; });
+  Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => { text += `*${exam}*: ${SIPHALA_DATA.pastPapers}\n\n`; });
   text += `Website: ${SIPHALA_DATA.url}`;
   await sendWhatsAppMessage(to, { type: 'text', text: { body: text } });
 }
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Siphala Advanced Bot running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Siphala Bot running on port ${PORT}`));
