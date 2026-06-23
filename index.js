@@ -7,100 +7,148 @@ app.use(express.json());
 // EDIT THIS PART: උඹේ Siphala.lk Details ඔක්කොම මෙතන දාන්න
 // ===================================================================
 const SIPHALA_DATA = {
-  name: 'SIPHLA LK',
-  url: 'https://siphalalk.vercel.app',
-  about: 'No. 1 E-Learning Platform\nGrade 3 ඉඳන් A/L දක්වා School Syllabus, Past Papers සහ YouTube Lessons නොමිලේ.\n\nVision: To redefine education through technology, making knowledge accessible and fun for every child.',
-  phone: '071 474 9893',
-  email: 'siphalakofficial@gmail.com',
-  telegram: 'siphalalk bot',
+  platform: {
+    name: 'SIPHLA LK',
+    slogan: 'Sri Lanka\'s Smart Learning Platform',
+    version: '2.0',
+    language: 'si',
+    country: 'Sri Lanka',
+    established: 2025
+  },
 
-  // Grades + Subjects - Website එකට Match වෙන විදියට
-  syllabus: {
-    '3': { name: '3 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Env': { name: 'පරිසරය', lessons: [] } } },
-    '4': { name: '4 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Env': { name: 'පරිසරය', lessons: [] } } },
+  contact: {
+    website: 'https://siphalalk.vercel.app',
+    phone: '0714749893',
+    email: 'siphalakofficial@gmail.com',
+    telegram: '@siphalalkbot',
+    whatsapp: '94714749893',
+    facebook: '',
+    youtube: '',
+    tiktok: ''
+  },
+
+  about: {
+    short:
+      'Grade 3 සිට A/L දක්වා නොමිලේ අධ්‍යාපනික සම්පත්.',
+
+    full:
+      `📚 School Syllabus
+🎥 YouTube Video Lessons
+📝 Past Papers
+📄 PDFs
+🎯 Scholarship Preparation
+📈 Exam Revision
+
+Vision:
+Technology හරහා සෑම දරුවෙකුටම ගුණාත්මක අධ්‍යාපනය ලබාදීම.`,
+
+    mission:
+      'Make education accessible, engaging and effective for every student.'
+  },
+
+  features: [
+    'Video Lessons',
+    'Past Papers',
+    'PDF Notes',
+    'Scholarship Preparation',
+    'Revision Papers',
+    'Online Exams',
+    'AI Learning Assistant'
+  ],
+
+  grades: {
+    '3': {
+      name: '3 ශ්‍රේණිය',
+      category: 'Primary',
+      subjects: {}
+    },
+
+    '4': {
+      name: '4 ශ්‍රේණිය',
+      category: 'Primary',
+      subjects: {}
+    },
+
     '5': {
       name: '5 ශ්‍රේණිය',
-      subjects: {
-        'Scholarship': {
-          name: 'ශිෂ්‍යත්ව - පෙරහුරු ප්‍රශ්න පත්‍ර',
-          lessons: [
-            { no: 1, title: 'ප්‍රශ්න පත්‍ර 1 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P1', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_1.pdf' },
-            { no: 2, title: 'ප්‍රශ්න පත්‍ර 2 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P2', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_2.pdf' },
-            { no: 3, title: 'ප්‍රශ්න පත්‍ර 3 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P3', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_3.pdf' },
-            { no: 4, title: 'ප්‍රශ්න පත්‍ර 4 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P4', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_4.pdf' },
-            { no: 5, title: 'ප්‍රශ්න පත්‍ර 5 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P5', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_5.pdf' },
-            { no: 6, title: 'ප්‍රශ්න පත්‍ර 6 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P6', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_6.pdf' },
-            { no: 7, title: 'ප්‍රශ්න පත්‍ර 7 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P7', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_7.pdf' },
-            { no: 8, title: 'ප්‍රශ්න පත්‍ර 8 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P8', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_8.pdf' },
-            { no: 9, title: 'ප්‍රශ්න පත්‍ර 9 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P9', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_9.pdf' },
-            { no: 10, title: 'ප්‍රශ්න පත්‍ර 10 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P10', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_10.pdf' },
-            { no: 11, title: 'ප්‍රශ්න පත්‍ර 11 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P11', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_11.pdf' },
-            { no: 12, title: 'ප්‍රශ්න පත්‍ර 12 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P12', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_12.pdf' },
-            { no: 13, title: 'ප්‍රශ්න පත්‍ර 13 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P13', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_13.pdf' },
-            { no: 14, title: 'ප්‍රශ්න පත්‍ර 14 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P14', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_14.pdf' },
-            { no: 15, title: 'ප්‍රශ්න පත්‍ර 15 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P15', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_15.pdf' }
-          ]
-        },
-        'Sinhala': { name: 'සිංහල', lessons: [] },
-        'Maths': { name: 'ගණිතය', lessons: [] }
-      }
+      category: 'Scholarship',
+      subjects: {}
     },
-    '6': { name: '6 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Science': { name: 'විද්‍යාව', lessons: [] }, 'History': { name: 'ඉතිහාසය', lessons: [] } } },
-    '7': { name: '7 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Science': { name: 'විද්‍යාව', lessons: [] }, 'History': { name: 'ඉතිහාසය', lessons: [] } } },
-    '8': { name: '8 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Science': { name: 'විද්‍යාව', lessons: [] }, 'History': { name: 'ඉතිහාසය', lessons: [] } } },
-    '9': { name: '9 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Science': { name: 'විද්‍යාව', lessons: [] }, 'History': { name: 'ඉතිහාසය', lessons: [] } } },
+
+    '6': {
+      name: '6 ශ්‍රේණිය',
+      category: 'Junior Secondary',
+      subjects: {}
+    },
+
+    '7': {
+      name: '7 ශ්‍රේණිය',
+      category: 'Junior Secondary',
+      subjects: {}
+    },
+
+    '8': {
+      name: '8 ශ්‍රේණිය',
+      category: 'Junior Secondary',
+      subjects: {}
+    },
+
+    '9': {
+      name: '9 ශ්‍රේණිය',
+      category: 'Junior Secondary',
+      subjects: {}
+    },
+
     '10': {
       name: '10 ශ්‍රේණිය',
-      subjects: {
-        'Buddhism': {
-          name: 'බුද්ධ ධර්මය',
-          lessons: [
-            { no: 1, title: 'අතියෙන් සැනහී සිටින බෝසතාණෝ', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_1', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_1.pdf' },
-            { no: 2, title: 'කඨින පූජා මහෝත්සවය', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_2', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_2.pdf' },
-            { no: 3, title: 'යහපත් දරුවන් හදන ගුණ', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_3', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_3.pdf' },
-            { no: 4, title: 'සර දිග වඩින අය', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_4', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_4.pdf' },
-            { no: 5, title: 'විදසුන් වඩවන අය හඳුනා ගනිමු', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_5', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_5.pdf' },
-            { no: 6, title: 'සසර සැප සැපතට අත වනා', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_6', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_6.pdf' },
-            { no: 7, title: 'බණ දහම් දියුණු කරන අය', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_7', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_7.pdf' },
-            { no: 8, title: 'අනුසස් දැක සිල්වත් වෙමු', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_8', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf' }
-          ]
-        },
-        'Science': { name: 'විද්‍යාව', lessons: [] },
-        'Maths': { name: 'ගණිතය', lessons: [] },
-        'History': { name: 'ඉතිහාසය', lessons: [] }
-      }
+      category: 'O/L',
+      subjects: {}
     },
+
     '11': {
       name: '11 ශ්‍රේණිය',
-      subjects: {
-        'Science': { name: 'විද්‍යාව', lessons: [] },
-        'Maths': { name: 'ගණිතය', lessons: [] },
-        'History': { name: 'ඉතිහාසය', lessons: [] },
-        'Buddhism': { name: 'බුද්ධ ධර්මය', lessons: [] }
-      }
+      category: 'O/L',
+      subjects: {}
     },
+
     'A/L': {
       name: 'උසස් පෙළ',
-      subjects: {
-        'Physics': { name: 'භෞතික විද්‍යාව', lessons: [] },
-        'Chemistry': { name: 'රසායන විද්‍යාව', lessons: [] },
-        'Biology': { name: 'ජීව විද්‍යාව', lessons: [] },
-        'Combined_Maths': { name: 'සංයුක්ත ගණිතය', lessons: [] },
-        'Accounting': { name: 'ගිණුම්කරණය', lessons: [] },
-        'Business': { name: 'ව්‍යාපාර අධ්‍යයනය', lessons: [] },
-        'Sinhala': { name: 'සිංහල', lessons: [] }
-      }
+      category: 'Advanced Level',
+      streams: [
+        'Science',
+        'Commerce',
+        'Arts',
+        'Technology'
+      ],
+      subjects: {}
     }
   },
 
   pastPapers: {
-    'A/L': 'https://siphalalk.vercel.app/papers/al',
-    'O/L': 'https://siphalalk.vercel.app/papers/ol',
-    'Scholarship': 'https://siphalalk.vercel.app/papers/scholarship'
+    scholarship: {
+      name: 'Scholarship',
+      url: '/papers/scholarship'
+    },
+
+    ol: {
+      name: 'O/L',
+      url: '/papers/ol'
+    },
+
+    al: {
+      name: 'A/L',
+      url: '/papers/al'
+    }
+  },
+
+  statistics: {
+    totalGrades: 10,
+    totalSubjects: 0,
+    totalLessons: 0,
+    totalVideos: 0,
+    totalPdfs: 0
   }
 };
-// ===================================================================
-
 // WhatsApp API Send Function
 async function sendWhatsAppMessage(to, data) {
   try {
