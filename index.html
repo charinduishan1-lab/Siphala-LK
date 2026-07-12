@@ -1,1 +1,136 @@
 
+'use client'
+import { useState, useEffect } from 'react'
+
+export default function AdminPanel() {
+  const [isLogin, setIsLogin] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [lessons, setLessons] = useState([])
+
+  const ADMIN_EMAIL = 'siphalakofficial@gmail.com' // ඔයාගේ Email එක
+  const ADMIN_PASSWORD = 'Siphala@2026' // Strong Password එකක් දාන්න
+
+  // Login
+  const handleLogin = () => {
+    if(email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      setIsLogin(true)
+      localStorage.setItem('adminLogin', 'true')
+    } else {
+      alert('වැරදි Email හෝ Password')
+    }
+  }
+
+  useEffect(() => {
+    if(localStorage.getItem('adminLogin') === 'true') setIsLogin(true)
+  }, [])
+
+  if(!isLogin) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.loginBox}>
+          <h1>🔐 SIPHLA LK Admin</h1>
+          <input 
+            type="email" 
+            placeholder="Admin Email" 
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            style={styles.input}
+          />
+          <input 
+            type="password" 
+            placeholder="Password" 
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            style={styles.input}
+          />
+          <button onClick={handleLogin} style={styles.btn}>Login</button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div style={styles.container}>
+      <h1>📚 SIPHLA LK Admin Dashboard</h1>
+      
+      <div style={styles.stats}>
+        <div style={styles.card}><h3>50,000+</h3><p>Students</p></div>
+        <div style={styles.card}><h3>1,000+</h3><p>Lessons</p></div>
+        <div style={styles.card}><h3>Grade 3 - A/L</h3><p>Classes</p></div>
+      </div>
+
+      <h2>➕ Add New Lesson</h2>
+      <AddLessonForm />
+
+      <h2>📝 All Lessons</h2>
+      <LessonTable />
+
+      <button onClick={() => {localStorage.removeItem('adminLogin'); setIsLogin(false)}} style={styles.logoutBtn}>
+        Logout
+      </button>
+    </div>
+  )
+}
+
+// Add Lesson Form
+function AddLessonForm() {
+  const [form, setForm] = useState({grade:'10', subject:'Buddhism', no:1, title:'', youtube:'', pdf:''})
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    // මේක Vercel KV, Supabase, හෝ JSON File එකට Save කරන්න
+    alert('Lesson Added! \n' + JSON.stringify(form, null, 2))
+    // API call: /api/add-lesson
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={styles.form}>
+      <select value={form.grade} onChange={e => setForm({...form, grade:e.target.value})} style={styles.input}>
+        <option value="3">Grade 3</option>
+        <option value="4">Grade 4</option>
+        <option value="5">Grade 5</option>
+        <option value="10">Grade 10</option>
+        <option value="11">Grade 11</option>
+        <option value="A/L">A/L</option>
+      </select>
+      <input placeholder="Subject" value={form.subject} onChange={e => setForm({...form, subject:e.target.value})} style={styles.input}/>
+      <input placeholder="Lesson No" type="number" value={form.no} onChange={e => setForm({...form, no:e.target.value})} style={styles.input}/>
+      <input placeholder="Lesson Title" value={form.title} onChange={e => setForm({...form, title:e.target.value})} style={styles.input}/>
+      <input placeholder="YouTube Link" value={form.youtube} onChange={e => setForm({...form, youtube:e.target.value})} style={styles.input}/>
+      <input placeholder="PDF Link" value={form.pdf} onChange={e => setForm({...form, pdf:e.target.value})} style={styles.input}/>
+      <button type="submit" style={styles.btn}>Add Lesson</button>
+    </form>
+  )
+}
+
+// Lesson Table
+function LessonTable() {
+  return (
+    <table style={styles.table}>
+      <thead>
+        <tr>
+          <th>Grade</th><th>Subject</th><th>Title</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>10</td><td>Buddhism</td><td>අතියෙන් සැනහී සිටින බෝසතාණෝ</td>
+          <td><button>Edit</button> <button>Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+  )
+}
+
+const styles = {
+  container: {padding:'20px', maxWidth:'1000px', margin:'auto', fontFamily:'sans-serif'},
+  loginBox: {maxWidth:'400px', margin:'100px auto', padding:'30px', border:'1px solid #ddd', borderRadius:'10px'},
+  input: {width:'100%', padding:'10px', margin:'10px 0', border:'1px solid #ccc', borderRadius:'5px'},
+  btn: {padding:'12px 20px', background:'#4F46E5', color:'white', border:'none', borderRadius:'5px', cursor:'pointer'},
+  logoutBtn: {padding:'10px', background:'red', color:'white', border:'none', borderRadius:'5px', marginTop:'20px'},
+  stats: {display:'flex', gap:'20px', margin:'20px 0'},
+  card: {flex:1, padding:'20px', border:'1px solid #ddd', borderRadius:'10px', textAlign:'center'},
+  form: {display:'flex', flexDirection:'column', gap:'10px', margin:'20px 0'},
+  table: {width:'100%', borderCollapse:'collapse'}, 
+}
