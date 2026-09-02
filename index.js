@@ -4,91 +4,281 @@ const app = express();
 app.use(express.json());
 
 // ===================================================================
-// EDIT THIS PART: උඹේ Siphala.lk Details ඔක්කොම මෙතන දාන්න
+// EDIT THIS PART: Add all your Siphala.lk details here
 // ===================================================================
 const SIPHALA_DATA = {
   name: 'SIPHLA LK',
   url: 'https://siphalalk.vercel.app',
-  about: 'No. 1 E-Learning Platform\nGrade 3 ඉඳන් A/L දක්වා School Syllabus, Past Papers සහ YouTube Lessons නොමිලේ.\n\nVision: To redefine education through technology, making knowledge accessible and fun for every child.',
+  about: 'No. 1 E-Learning Platform\nFree School Syllabus, Past Papers, and YouTube Lessons from Grade 3 to A/L.\n\nVision: To redefine education through technology, making knowledge accessible and fun for every child.',
   phone: '071 474 9893',
   email: 'siphalakofficial@gmail.com',
   telegram: 'siphalalk bot',
 
-  // Grades + Subjects - Website එකට Match වෙන විදියට
+  // Grades + Subjects - Match the website structure
   syllabus: {
-    '3': { name: '3 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Env': { name: 'පරිසරය', lessons: [] } } },
-    '4': { name: '4 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Env': { name: 'පරිසරය', lessons: [] } } },
+    '3': {
+      name: 'Grade 3',
+      subjects: {
+        'Sinhala': { name: 'Sinhala', lessons: [] },
+        'Maths': { name: 'Mathematics', lessons: [] },
+        'Env': { name: 'Environment', lessons: [] }
+      }
+    },
+
+    '4': {
+      name: 'Grade 4',
+      subjects: {
+        'Sinhala': { name: 'Sinhala', lessons: [] },
+        'Maths': { name: 'Mathematics', lessons: [] },
+        'Env': { name: 'Environment', lessons: [] }
+      }
+    },
+
     '5': {
-      name: '5 ශ්‍රේණිය',
+      name: 'Grade 5',
       subjects: {
         'Scholarship': {
-          name: 'ශිෂ්‍යත්ව - පෙරහුරු ප්‍රශ්න පත්‍ර',
+          name: 'Scholarship - Practice Papers',
           lessons: [
-            { no: 1, title: 'ප්‍රශ්න පත්‍ර 1 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P1', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_1.pdf' },
-            { no: 2, title: 'ප්‍රශ්න පත්‍ර 2 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P2', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_2.pdf' },
-            { no: 3, title: 'ප්‍රශ්න පත්‍ර 3 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P3', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_3.pdf' },
-            { no: 4, title: 'ප්‍රශ්න පත්‍ර 4 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P4', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_4.pdf' },
-            { no: 5, title: 'ප්‍රශ්න පත්‍ර 5 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P5', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_5.pdf' },
-            { no: 6, title: 'ප්‍රශ්න පත්‍ර 6 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P6', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_6.pdf' },
-            { no: 7, title: 'ප්‍රශ්න පත්‍ර 7 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P7', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_7.pdf' },
-            { no: 8, title: 'ප්‍රශ්න පත්‍ර 8 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P8', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_8.pdf' },
-            { no: 9, title: 'ප්‍රශ්න පත්‍ර 9 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P9', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_9.pdf' },
-            { no: 10, title: 'ප්‍රශ්න පත්‍ර 10 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P10', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_10.pdf' },
-            { no: 11, title: 'ප්‍රශ්න පත්‍ර 11 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P11', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_11.pdf' },
-            { no: 12, title: 'ප්‍රශ්න පත්‍ර 12 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P12', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_12.pdf' },
-            { no: 13, title: 'ප්‍රශ්න පත්‍ර 13 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P13', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_13.pdf' },
-            { no: 14, title: 'ප්‍රශ්න පත්‍ර 14 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P14', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_14.pdf' },
-            { no: 15, title: 'ප්‍රශ්න පත්‍ර 15 | Online', youtube: 'https://youtube.com/watch?v=REPLACE_G5_P15', pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_15.pdf' }
+            {
+              no: 1,
+              title: 'Practice Paper 1 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P1',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_1.pdf'
+            },
+            {
+              no: 2,
+              title: 'Practice Paper 2 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P2',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_2.pdf'
+            },
+            {
+              no: 3,
+              title: 'Practice Paper 3 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P3',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_3.pdf'
+            },
+            {
+              no: 4,
+              title: 'Practice Paper 4 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P4',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_4.pdf'
+            },
+            {
+              no: 5,
+              title: 'Practice Paper 5 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P5',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_5.pdf'
+            },
+            {
+              no: 6,
+              title: 'Practice Paper 6 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P6',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_6.pdf'
+            },
+            {
+              no: 7,
+              title: 'Practice Paper 7 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P7',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_7.pdf'
+            },
+            {
+              no: 8,
+              title: 'Practice Paper 8 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P8',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_8.pdf'
+            },
+            {
+              no: 9,
+              title: 'Practice Paper 9 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P9',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_9.pdf'
+            },
+            {
+              no: 10,
+              title: 'Practice Paper 10 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P10',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_10.pdf'
+            },
+            {
+              no: 11,
+              title: 'Practice Paper 11 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P11',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_11.pdf'
+            },
+            {
+              no: 12,
+              title: 'Practice Paper 12 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P12',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_12.pdf'
+            },
+            {
+              no: 13,
+              title: 'Practice Paper 13 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P13',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_13.pdf'
+            },
+            {
+              no: 14,
+              title: 'Practice Paper 14 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P14',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_14.pdf'
+            },
+            {
+              no: 15,
+              title: 'Practice Paper 15 | Online',
+              youtube: 'https://youtube.com/watch?v=REPLACE_G5_P15',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade5_scholarship_15.pdf'
+            }
           ]
         },
-        'Sinhala': { name: 'සිංහල', lessons: [] },
-        'Maths': { name: 'ගණිතය', lessons: [] }
+
+        'Sinhala': {
+          name: 'Sinhala',
+          lessons: []
+        },
+
+        'Maths': {
+          name: 'Mathematics',
+          lessons: []
+        }
       }
     },
-    '6': { name: '6 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Science': { name: 'විද්‍යාව', lessons: [] }, 'History': { name: 'ඉතිහාසය', lessons: [] } } },
-    '7': { name: '7 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Science': { name: 'විද්‍යාව', lessons: [] }, 'History': { name: 'ඉතිහාසය', lessons: [] } } },
-    '8': { name: '8 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Science': { name: 'විද්‍යාව', lessons: [] }, 'History': { name: 'ඉතිහාසය', lessons: [] } } },
-    '9': { name: '9 ශ්‍රේණිය', subjects: { 'Sinhala': { name: 'සිංහල', lessons: [] }, 'Maths': { name: 'ගණිතය', lessons: [] }, 'Science': { name: 'විද්‍යාව', lessons: [] }, 'History': { name: 'ඉතිහාසය', lessons: [] } } },
+
+    '6': {
+      name: 'Grade 6',
+      subjects: {
+        'Sinhala': { name: 'Sinhala', lessons: [] },
+        'Maths': { name: 'Mathematics', lessons: [] },
+        'Science': { name: 'Science', lessons: [] },
+        'History': { name: 'History', lessons: [] }
+      }
+    },
+
+    '7': {
+      name: 'Grade 7',
+      subjects: {
+        'Sinhala': { name: 'Sinhala', lessons: [] },
+        'Maths': { name: 'Mathematics', lessons: [] },
+        'Science': { name: 'Science', lessons: [] },
+        'History': { name: 'History', lessons: [] }
+      }
+    },
+
+    '8': {
+      name: 'Grade 8',
+      subjects: {
+        'Sinhala': { name: 'Sinhala', lessons: [] },
+        'Maths': { name: 'Mathematics', lessons: [] },
+        'Science': { name: 'Science', lessons: [] },
+        'History': { name: 'History', lessons: [] }
+      }
+    },
+
+    '9': {
+      name: 'Grade 9',
+      subjects: {
+        'Sinhala': { name: 'Sinhala', lessons: [] },
+        'Maths': { name: 'Mathematics', lessons: [] },
+        'Science': { name: 'Science', lessons: [] },
+        'History': { name: 'History', lessons: [] }
+      }
+    },
+
     '10': {
-      name: '10 ශ්‍රේණිය',
+      name: 'Grade 10',
       subjects: {
         'Buddhism': {
-          name: 'බුද්ධ ධර්මය',
+          name: 'Buddhism',
           lessons: [
-            { no: 1, title: 'අතියෙන් සැනහී සිටින බෝසතාණෝ', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_1', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_1.pdf' },
-            { no: 2, title: 'කඨින පූජා මහෝත්සවය', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_2', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_2.pdf' },
-            { no: 3, title: 'යහපත් දරුවන් හදන ගුණ', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_3', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_3.pdf' },
-            { no: 4, title: 'සර දිග වඩින අය', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_4', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_4.pdf' },
-            { no: 5, title: 'විදසුන් වඩවන අය හඳුනා ගනිමු', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_5', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_5.pdf' },
-            { no: 6, title: 'සසර සැප සැපතට අත වනා', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_6', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_6.pdf' },
-            { no: 7, title: 'බණ දහම් දියුණු කරන අය', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_7', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_7.pdf' },
-            { no: 8, title: 'අනුසස් දැක සිල්වත් වෙමු', youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_8', pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf' }
+            {
+              no: 1,
+              title: 'The Bodhisattva Who Brings Comfort',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_1',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_1.pdf'
+            },
+            {
+              no: 2,
+              title: 'The Katina Ceremony',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_2',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_2.pdf'
+            },
+            {
+              no: 3,
+              title: 'Virtues That Create Good Children',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_3',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_3.pdf'
+            },
+            {
+              no: 4,
+              title: 'Those Who Progress Along the Path',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_4',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_4.pdf'
+            },
+            {
+              no: 5,
+              title: 'Let Us Identify Those Who Develop Insight',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_5',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_5.pdf'
+            },
+            {
+              no: 6,
+              title: 'Waving Goodbye to Samsaric Happiness',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_6',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_6.pdf'
+            },
+            {
+              no: 7,
+              title: 'Those Who Develop Dhamma Knowledge',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_7',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_7.pdf'
+            },
+            {
+              no: 8,
+              title: 'Let Us Become Virtuous by Seeing the Benefits',
+              youtube: 'https://youtube.com/watch?v=REPLACE_LESSON_8',
+              pdf: 'https://siphalalk.vercel.app/pdf/grade10_buddhism_8.pdf'
+            }
           ]
         },
-        'Science': { name: 'විද්‍යාව', lessons: [] },
-        'Maths': { name: 'ගණිතය', lessons: [] },
-        'History': { name: 'ඉතිහාසය', lessons: [] }
+
+        'Science': {
+          name: 'Science',
+          lessons: []
+        },
+
+        'Maths': {
+          name: 'Mathematics',
+          lessons: []
+        },
+
+        'History': {
+          name: 'History',
+          lessons: []
+        }
       }
     },
+
     '11': {
-      name: '11 ශ්‍රේණිය',
+      name: 'Grade 11',
       subjects: {
-        'Science': { name: 'විද්‍යාව', lessons: [] },
-        'Maths': { name: 'ගණිතය', lessons: [] },
-        'History': { name: 'ඉතිහාසය', lessons: [] },
-        'Buddhism': { name: 'බුද්ධ ධර්මය', lessons: [] }
+        'Science': { name: 'Science', lessons: [] },
+        'Maths': { name: 'Mathematics', lessons: [] },
+        'History': { name: 'History', lessons: [] },
+        'Buddhism': { name: 'Buddhism', lessons: [] }
       }
     },
+
     'A/L': {
-      name: 'උසස් පෙළ',
+      name: 'A/L',
       subjects: {
-        'Physics': { name: 'භෞතික විද්‍යාව', lessons: [] },
-        'Chemistry': { name: 'රසායන විද්‍යාව', lessons: [] },
-        'Biology': { name: 'ජීව විද්‍යාව', lessons: [] },
-        'Combined_Maths': { name: 'සංයුක්ත ගණිතය', lessons: [] },
-        'Accounting': { name: 'ගිණුම්කරණය', lessons: [] },
-        'Business': { name: 'ව්‍යාපාර අධ්‍යයනය', lessons: [] },
-        'Sinhala': { name: 'සිංහල', lessons: [] }
+        'Physics': { name: 'Physics', lessons: [] },
+        'Chemistry': { name: 'Chemistry', lessons: [] },
+        'Biology': { name: 'Biology', lessons: [] },
+        'Combined_Maths': { name: 'Combined Mathematics', lessons: [] },
+        'Accounting': { name: 'Accounting', lessons: [] },
+        'Business': { name: 'Business Studies', lessons: [] },
+        'Sinhala': { name: 'Sinhala', lessons: [] }
       }
     }
   },
@@ -99,6 +289,7 @@ const SIPHALA_DATA = {
     'Scholarship': 'https://siphalalk.vercel.app/papers/scholarship'
   }
 };
+
 // ===================================================================
 
 // WhatsApp API Send Function
@@ -106,15 +297,26 @@ async function sendWhatsAppMessage(to, data) {
   try {
     await axios.post(
       `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
-      { messaging_product: 'whatsapp', to: to,...data },
-      { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
+      {
+        messaging_product: 'whatsapp',
+        to: to,
+        ...data
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`
+        }
+      }
     );
   } catch (error) {
-    console.error('Send Error:', error.response?.data || error.message);
+    console.error(
+      'Send Error:',
+      error.response?.data || error.message
+    );
   }
 }
 
-// 👇 1. Typing Indicator Function එක
+// 1. Typing Indicator Function
 async function showTyping(to, messageId) {
   try {
     await axios.post(
@@ -123,19 +325,36 @@ async function showTyping(to, messageId) {
         messaging_product: 'whatsapp',
         status: 'read',
         message_id: messageId,
-        typing_indicator: { type: 'text' }
+        typing_indicator: {
+          type: 'text'
+        }
       },
-      { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`
+        }
+      }
     );
   } catch (error) {
-    console.error('Typing Error:', error.response?.data || error.message);
+    console.error(
+      'Typing Error:',
+      error.response?.data || error.message
+    );
   }
 }
 
 // 1. Webhook Verify
 app.get('/webhook', (req, res) => {
-  const { 'hub.mode': mode, 'hub.verify_token': token, 'hub.challenge': challenge } = req.query;
-  if (mode === 'subscribe' && token === process.env.VERIFY_TOKEN) {
+  const {
+    'hub.mode': mode,
+    'hub.verify_token': token,
+    'hub.challenge': challenge
+  } = req.query;
+
+  if (
+    mode === 'subscribe' &&
+    token === process.env.VERIFY_TOKEN
+  ) {
     res.status(200).send(challenge);
   } else {
     res.status(403).send('Forbidden');
@@ -145,87 +364,150 @@ app.get('/webhook', (req, res) => {
 // 2. Message Handler
 app.post('/webhook', async (req, res) => {
   const body = req.body;
-  if (!body.object) return res.sendStatus(404);
+
+  if (!body.object) {
+    return res.sendStatus(404);
+  }
 
   const entry = body.entry[0].changes[0].value;
   const message = entry.messages?.[0];
   const from = message?.from;
 
-  if (!message) return res.status(200).send('EVENT_RECEIVED');
+  if (!message) {
+    return res.status(200).send('EVENT_RECEIVED');
+  }
 
-  // 👇 2. Typing පෙන්නනවා + Delay එක
+  // 2. Show typing indicator + Delay
   await showTyping(from, message.id);
-  await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5s delay
 
-  // 👇 3. Message Log කරනවා
-  console.log(`📩 New Message from ${from}:`, message.text?.body || message.interactive?.button_reply?.id || message.interactive?.list_reply?.id);
+  await new Promise(resolve =>
+    setTimeout(resolve, 1500)
+  );
+
+  // 3. Log the message
+  console.log(
+    `📩 New Message from ${from}:`,
+    message.text?.body ||
+    message.interactive?.button_reply?.id ||
+    message.interactive?.list_reply?.id
+  );
 
   // Handle Button Clicks
   if (message.type === 'interactive') {
-    const buttonId = message.interactive.button_reply?.id || message.interactive.list_reply?.id;
+    const buttonId =
+      message.interactive.button_reply?.id ||
+      message.interactive.list_reply?.id;
 
     // Main Menu Button
     if (buttonId === 'main_menu') {
       await sendMainMenu(from);
     }
+
     // Grade List
     else if (buttonId === 'grade_list') {
       await sendGradeList(from);
     }
+
     // Grade Selection
     else if (buttonId.startsWith('grade_')) {
       const grade = buttonId.replace('grade_', '');
       await sendSubjectMenu(from, grade);
     }
+
     // Subject Selection
     else if (buttonId.startsWith('subject_')) {
       const parts = buttonId.split('_');
       const grade = parts[1];
       const subject = parts.slice(2).join('_');
-      await sendLessonList(from, grade, subject);
+
+      await sendLessonList(
+        from,
+        grade,
+        subject
+      );
     }
+
     // Lesson Selection
     else if (buttonId.startsWith('lesson_')) {
       const parts = buttonId.split('_');
       const grade = parts[1];
       const subject = parts[2];
       const lessonNo = parts[3];
-      await sendLessonDetails(from, grade, subject, lessonNo);
+
+      await sendLessonDetails(
+        from,
+        grade,
+        subject,
+        lessonNo
+      );
     }
+
     // Video Button
     else if (buttonId.startsWith('video_')) {
-      const youtubeLink = buttonId.replace('video_', '');
-      await sendWhatsAppMessage(from, { type: 'text', text: { body: `▶️ YouTube Video:\n${youtubeLink}` } });
+      const youtubeLink =
+        buttonId.replace('video_', '');
+
+      await sendWhatsAppMessage(from, {
+        type: 'text',
+        text: {
+          body:
+            `▶️ YouTube Video:\n${youtubeLink}`
+        }
+      });
     }
+
     // PDF Button
     else if (buttonId.startsWith('pdf_')) {
-      const pdfLink = buttonId.replace('pdf_', '');
-      await sendWhatsAppMessage(from, { type: 'text', text: { body: `📄 PDF Download:\n${pdfLink}` } });
+      const pdfLink =
+        buttonId.replace('pdf_', '');
+
+      await sendWhatsAppMessage(from, {
+        type: 'text',
+        text: {
+          body:
+            `📄 PDF Download:\n${pdfLink}`
+        }
+      });
     }
+
     // Past Papers
     else if (buttonId === 'past_papers') {
       await sendPastPapers(from);
     }
+
     // Contact
     else if (buttonId === 'contact') {
       await sendContact(from);
     }
-    return res.status(200).send('EVENT_RECEIVED');
+
+    return res
+      .status(200)
+      .send('EVENT_RECEIVED');
   }
 
   // Handle Text Messages
-  const msg_body = message.text?.body?.toLowerCase().trim() || '';
+  const msg_body =
+    message.text?.body?.toLowerCase().trim() || '';
 
-  if (['hi', 'hello', 'start', 'menu'].some(w => msg_body.includes(w))) {
+  if (
+    ['hi', 'hello', 'start', 'menu']
+      .some(w => msg_body.includes(w))
+  ) {
     await sendMainMenu(from);
   }
+
   else if (msg_body.includes('grade')) {
     await sendGradeList(from);
   }
+
   else {
     await sendWhatsAppMessage(from, {
       type: 'text',
-      text: { body: `සමාවෙන්න, මට තේරුනේ නෑ 😅\n\nMenu එක ගන්න *hi* කියලා Type කරන්න` }
+      text: {
+        body:
+          `Sorry, I didn't understand that 😅\n\n` +
+          `Type *hi* to open the menu.`
+      }
     });
   }
 
@@ -240,12 +522,38 @@ async function sendMainMenu(to) {
     type: 'interactive',
     interactive: {
       type: 'button',
-      body: { text: `ආයුබෝවන්! *${SIPHALA_DATA.name}* එකට සාදරයෙන් පිළිගන්නවා 🙏\n\n${SIPHALA_DATA.about}` },
+
+      body: {
+        text:
+          `Hello! Welcome to *${SIPHALA_DATA.name}* 🙏\n\n` +
+          `${SIPHALA_DATA.about}`
+      },
+
       action: {
         buttons: [
-          { type: 'reply', reply: { id: 'grade_list', title: '📚 ශ්‍රේණියක් තෝරන්න' } },
-          { type: 'reply', reply: { id: 'past_papers', title: '📝 Past Papers' } },
-          { type: 'reply', reply: { id: 'contact', title: '📞 Contact Us' } }
+          {
+            type: 'reply',
+            reply: {
+              id: 'grade_list',
+              title: '📚 Select a Grade'
+            }
+          },
+
+          {
+            type: 'reply',
+            reply: {
+              id: 'past_papers',
+              title: '📝 Past Papers'
+            }
+          },
+
+          {
+            type: 'reply',
+            reply: {
+              id: 'contact',
+              title: '📞 Contact Us'
+            }
+          }
         ]
       }
     }
@@ -254,20 +562,34 @@ async function sendMainMenu(to) {
 
 // 2. Grade List
 async function sendGradeList(to) {
-  const rows = Object.keys(SIPHALA_DATA.syllabus).map(grade => ({
-    id: `grade_${grade}`,
-    title: SIPHALA_DATA.syllabus[grade].name,
-    description: `${grade} ශ්‍රේණියේ Syllabus බලන්න`
-  }));
+  const rows =
+    Object.keys(SIPHALA_DATA.syllabus)
+      .map(grade => ({
+        id: `grade_${grade}`,
+        title:
+          SIPHALA_DATA.syllabus[grade].name,
+        description:
+          `View the ${grade} grade syllabus`
+      }));
 
   await sendWhatsAppMessage(to, {
     type: 'interactive',
     interactive: {
       type: 'list',
-      body: { text: '📚 *ඔයාගේ ශ්‍රේණිය තෝරන්න*' },
+
+      body: {
+        text: '📚 *Select your grade*'
+      },
+
       action: {
         button: 'Grades',
-        sections: [{ title: 'Syllabus', rows }]
+
+        sections: [
+          {
+            title: 'Syllabus',
+            rows
+          }
+        ]
       }
     }
   });
@@ -275,66 +597,171 @@ async function sendGradeList(to) {
 
 // 3. Subject Menu
 async function sendSubjectMenu(to, grade) {
-  const subjects = SIPHALA_DATA.syllabus[grade].subjects;
-  const buttons = Object.keys(subjects).slice(0, 3).map(sub => ({
-    type: 'reply',
-    reply: { id: `subject_${grade}_${sub}`, title: subjects[sub].name.substring(0, 20) }
-  }));
+  const subjects =
+    SIPHALA_DATA.syllabus[grade].subjects;
+
+  const buttons =
+    Object.keys(subjects)
+      .slice(0, 3)
+      .map(sub => ({
+        type: 'reply',
+
+        reply: {
+          id: `subject_${grade}_${sub}`,
+          title:
+            subjects[sub].name.substring(0, 20)
+        }
+      }));
 
   await sendWhatsAppMessage(to, {
     type: 'interactive',
     interactive: {
       type: 'button',
-      body: { text: `📘 *${SIPHALA_DATA.syllabus[grade].name}*\n\nSubject එකක් තෝරන්න:` },
-      action: { buttons }
+
+      body: {
+        text:
+          `📘 *${SIPHALA_DATA.syllabus[grade].name}*\n\n` +
+          `Select a subject:`
+      },
+
+      action: {
+        buttons
+      }
     }
   });
 }
 
 // 4. Lesson List
-async function sendLessonList(to, grade, subject) {
-  const lessons = SIPHALA_DATA.syllabus[grade].subjects[subject].lessons;
+async function sendLessonList(
+  to,
+  grade,
+  subject
+) {
+  const lessons =
+    SIPHALA_DATA
+      .syllabus[grade]
+      .subjects[subject]
+      .lessons;
+
   if (lessons.length === 0) {
-    return sendWhatsAppMessage(to, { type: 'text', text: { body: 'මේ Subject එකට තාම Lessons Add කරලා නෑ. ඉක්මනින්ම දාන්නම්!' } });
+    return sendWhatsAppMessage(to, {
+      type: 'text',
+      text: {
+        body:
+          'Lessons have not been added for this subject yet. ' +
+          'We will add them soon!'
+      }
+    });
   }
 
-  const rows = lessons.map(lesson => ({
-    id: `lesson_${grade}_${subject}_${lesson.no}`,
-    title: `${lesson.no} පාඩම`,
-    description: lesson.title.substring(0, 72)
-  }));
+  const rows =
+    lessons.map(lesson => ({
+      id:
+        `lesson_${grade}_${subject}_${lesson.no}`,
+
+      title:
+        `Lesson ${lesson.no}`,
+
+      description:
+        lesson.title.substring(0, 72)
+    }));
 
   await sendWhatsAppMessage(to, {
     type: 'interactive',
+
     interactive: {
       type: 'list',
-      body: { text: `☸️ *${SIPHALA_DATA.syllabus[grade].subjects[subject].name} - ${grade} ශ්‍රේණිය*\n\nපාඩමක් තෝරන්න:` },
+
+      body: {
+        text:
+          `☸️ *${SIPHALA_DATA.syllabus[grade].subjects[subject].name} - ${grade}*\n\n` +
+          `Select a lesson:`
+      },
+
       action: {
         button: 'Lessons',
-        sections: [{ title: 'පාඩම්', rows }]
+
+        sections: [
+          {
+            title: 'Lessons',
+            rows
+          }
+        ]
       }
     }
   });
 }
 
 // 5. Send Lesson Details: Video + PDF Buttons
-async function sendLessonDetails(to, grade, subject, lessonNo) {
-  const lesson = SIPHALA_DATA.syllabus[grade].subjects[subject].lessons.find(l => l.no == lessonNo);
+async function sendLessonDetails(
+  to,
+  grade,
+  subject,
+  lessonNo
+) {
+  const lesson =
+    SIPHALA_DATA
+      .syllabus[grade]
+      .subjects[subject]
+      .lessons
+      .find(l => l.no == lessonNo);
 
   if (!lesson) {
-    return sendWhatsAppMessage(to, { type: 'text', text: { body: 'සමාවෙන්න, පාඩම හොයාගන්න බැරිවුණා 😅' } });
+    return sendWhatsAppMessage(to, {
+      type: 'text',
+      text: {
+        body:
+          'Sorry, I could not find that lesson 😅'
+      }
+    });
   }
 
   await sendWhatsAppMessage(to, {
     type: 'interactive',
+
     interactive: {
       type: 'button',
-      body: { text: `🎥 *${lesson.no} පාඩම: ${lesson.title}*\n\n*${grade} ශ්‍රේණිය - ${SIPHALA_DATA.syllabus[grade].subjects[subject].name}*` },
+
+      body: {
+        text:
+          `🎥 *Lesson ${lesson.no}: ${lesson.title}*\n\n` +
+          `*${grade} - ${SIPHALA_DATA.syllabus[grade].subjects[subject].name}*`
+      },
+
       action: {
         buttons: [
-          { type: 'reply', reply: { id: `video_${lesson.youtube}`, title: '▶️ YouTube Video' } },
-          { type: 'reply', reply: { id: `pdf_${lesson.pdf}`, title: '📄 Download PDF' } },
-          { type: 'reply', reply: { id: 'main_menu', title: '🏠 Main Menu' } }
+          {
+            type: 'reply',
+
+            reply: {
+              id:
+                `video_${lesson.youtube}`,
+
+              title:
+                '▶️ YouTube Video'
+            }
+          },
+
+          {
+            type: 'reply',
+
+            reply: {
+              id:
+                `pdf_${lesson.pdf}`,
+
+              title:
+                '📄 Download PDF'
+            }
+          },
+
+          {
+            type: 'reply',
+
+            reply: {
+              id: 'main_menu',
+              title: '🏠 Main Menu'
+            }
+          }
         ]
       }
     }
@@ -343,29 +770,51 @@ async function sendLessonDetails(to, grade, subject, lessonNo) {
 
 // 6. Past Papers - FIXED BUG HERE
 async function sendPastPapers(to) {
-  let text = `📝 *Past Papers Download*\n\n`;
-  Object.keys(SIPHALA_DATA.pastPapers).forEach(exam => {
-    text += `*${exam}*: ${SIPHALA_DATA.pastPapers[exam]}\n\n`; // 👈 මේක තමයි Bug එක. [exam] දැම්මා
-  });
-  text += `Website: ${SIPHALA_DATA.url}`;
+  let text =
+    `📝 *Past Papers Download*\n\n`;
 
-  await sendWhatsAppMessage(to, { type: 'text', text: { body: text } });
+  Object.keys(
+    SIPHALA_DATA.pastPapers
+  ).forEach(exam => {
+    text +=
+      `*${exam}*: ${SIPHALA_DATA.pastPapers[exam]}\n\n`;
+  });
+
+  text +=
+    `Website: ${SIPHALA_DATA.url}`;
+
+  await sendWhatsAppMessage(to, {
+    type: 'text',
+    text: {
+      body: text
+    }
+  });
 }
 
 // 7. Contact - UPDATED
 async function sendContact(to) {
   await sendWhatsAppMessage(to, {
     type: 'text',
+
     text: {
-      body: `📞 *Contact SIPHLA LK*\n\n` +
-            `📱 Phone: ${SIPHALA_DATA.phone}\n` +
-            `📧 Email: ${SIPHALA_DATA.email}\n` +
-            `✈️ Telegram: ${SIPHALA_DATA.telegram}\n` +
-            `🌐 Website: ${SIPHALA_DATA.url}\n\n` +
-            `ඕනම ගැටලුවක් තියෙනවා නම් අපිට කතා කරන්න 🙏`
+      body:
+        `📞 *Contact SIPHLA LK*\n\n` +
+        `📱 Phone: ${SIPHALA_DATA.phone}\n` +
+        `📧 Email: ${SIPHALA_DATA.email}\n` +
+        `✈️ Telegram: ${SIPHALA_DATA.telegram}\n` +
+        `🌐 Website: ${SIPHALA_DATA.url}\n\n` +
+        `If you have any questions or problems, please contact us 🙏`
     }
   });
 }
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Siphala Advanced Bot running on port ${PORT}`));
+const PORT =
+  process.env.PORT || 3000;
+
+app.listen(
+  PORT,
+  () =>
+    console.log(
+      `Siphala Advanced Bot running on port ${PORT}`
+    )
+);
