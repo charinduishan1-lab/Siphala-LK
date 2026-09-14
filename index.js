@@ -798,7 +798,7 @@ async function sendContact(to) {
 
     text: {
       body:
-        `📞 *Contact SIPHLA LK*\n\n` +
+        `📞 *Contact SIPHALA LK*\n\n` +
         `📱 Phone: ${SIPHALA_DATA.phone}\n` +
         `📧 Email: ${SIPHALA_DATA.email}\n` +
         `✈️ Telegram: ${SIPHALA_DATA.telegram}\n` +
