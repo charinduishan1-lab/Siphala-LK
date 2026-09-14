@@ -7,11 +7,11 @@ app.use(express.json());
 // EDIT THIS PART: Add all your Siphala.lk details here
 // ===================================================================
 const SIPHALA_DATA = {
-  name: 'SIPHLA LK',
+  name: 'SIPHALA LK',
   url: 'https://siphalalk.vercel.app',
   about: 'No. 1 E-Learning Platform\nFree School Syllabus, Past Papers, and YouTube Lessons from Grade 3 to A/L.\n\nVision: To redefine education through technology, making knowledge accessible and fun for every child.',
   phone: '071 474 9893',
-  email: 'siphalakofficial@gmail.com',
+  email: 'siphalalkofficial@gmail.com',
   telegram: 'siphalalk bot',
 
   // Grades + Subjects - Match the website structure
